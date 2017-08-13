@@ -1,8 +1,10 @@
 var res = {
-
+    fen:"res/images/fen.png",
+    pen:"res/images/pen.png"
 };
 var start_resources=[
-
+    res.fen,
+    res.pen
 ];
 var g_resources = [
     //image
