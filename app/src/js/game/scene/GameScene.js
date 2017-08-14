@@ -3,6 +3,7 @@ var EventLayer = require('../layer/EventLayer.js');
 var RiceLayer = require('../layer/RiceLayer.js');
 var PlayerLayer = require('../layer/PlayerLayer.js');
 var SpineSprite = require('../sprite/SpineSprite.js');
+var InitData = require('../mock/InitData.js');
 
 var PlayerSprite = require('../sprite/PlayerSprite.js');
 var GameLayer = qc.Layer.extend({
@@ -17,8 +18,8 @@ var GameLayer = qc.Layer.extend({
         this.winSize = qc.director.getWinSize();
         this.initRiceLayer();
         this.initPlayerLayer();
-        this.initSpine();
-        this.initPlayer();
+        //this.initSpine();
+        //this.initPlayer();
         this.initEventLayer();
     },
     initRiceLayer:function() {
@@ -26,12 +27,11 @@ var GameLayer = qc.Layer.extend({
         this.addChild(this.riceLayer);
     },
     initPlayerLayer:function(){
-        this.playerLayer = PlayerLayer.create([],"sss");
-        this.addChild(PlayerLayer);
+        this.playerLayer = PlayerLayer.create(InitData,"吃货火柴棍");
+        this.addChild(this.playerLayer);
     },
     initSpine:function(){
         var spine = SpineSprite.create(50);
-        console.log(this.winSize);
         spine.setPosition(this.winSize.width/2,this.winSize.height/2);
         this.addChild(spine);
     },

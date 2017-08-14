@@ -11,7 +11,6 @@ var PlayerDrawSprite = qc.Sprite.extend({
         this.title = title;
         this.r = r;
         this.initSprite();
-        console.log(color);
     },
     changeR:function(r){
         this.r = r;

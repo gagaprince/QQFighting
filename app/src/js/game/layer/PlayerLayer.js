@@ -3,21 +3,26 @@
  * @type {void|*}
  */
 
-var PlayerGroupSprite = require('../sprite/RiceSprite.js');
+var PlayerGroupSprite = require('../sprite/PlayerGroupSprite.js');
+var SpineSprite = require('../sprite/SpineSprite.js');
 var PlayerLayer = qc.Layer.extend({
     playGroups:null,
     spines:null,
     mySelf:null,
     all:null,//由玩家和尖刺组成的数组 会根据weight排序
-
-    init:function(playerMsgs,title){
+    init:function(gameData,title){
+        this.resetAllByData(gameData,title);
+    },
+    resetAllByData:function(gameData,title){
         this.playGroups = [];
         this.spines = [];
         this.all = [];
-        this.initPlayerGroups(playerMsgs,title);
-
+        this.initPlayerGroups(gameData,title);
+        this.initSpine(gameData);
+        this.sortAll();
     },
-    initPlayerGroups:function(playerMsgs,title){
+    initPlayerGroups:function(gameData,title){
+        var playerMsgs = gameData.players;
         for(var i=0;i<playerMsgs.length;i++){
             var playerMsg = playerMsgs[i];
             var tin = playerMsg.title;
@@ -26,10 +31,28 @@ var PlayerLayer = qc.Layer.extend({
                 this.initMySelf(playerGroup);
             }
         }
-        this.sortAll();
+
+    },
+    initSpine:function(gameData){
+        var spineMsgs = gameData.spines;
+        console.log(spineMsgs);
+        for(var i=0;i<spineMsgs.length;i++){
+            var spineMsg = spineMsgs[i];
+            var weight = spineMsg.weight;
+            var posMsg = spineMsg.pos;
+            var pos = qc.p(posMsg.x,posMsg.y);
+            var spine = SpineSprite.createWithWeight(weight);
+            spine.setPosition(pos);
+            this.spines.push(spine);
+        }
     },
     sortAll:function(){
-        this.all = [].concat(this.playGroups).concat(this.spines);
+        var playGroups = this.playGroups;
+        this.all = [];
+        for(var i=0;i<playGroups.length;i++){
+            this.all = this.all.concat(this.playGroups[i].getPlayers());
+        }
+        this.all = this.all.concat(this.spines);
         this.all.sort(function(s1,s2){
             return s1.weight-s2.weight;
         });
@@ -38,6 +61,7 @@ var PlayerLayer = qc.Layer.extend({
     resetAllSprite:function(){
         this.removeAllChildren();
         var all = this.all;
+        console.log(all)
         for(var i=0;i<all.length;i++){
             var s = all[i];
             this.addChild(s);
@@ -53,9 +77,9 @@ var PlayerLayer = qc.Layer.extend({
         return playerGroup;
     }
 });
-PlayerLayer.create = function(playerMsgs,title){
+PlayerLayer.create = function(gameData,title){
     var layer = new PlayerLayer();
-    layer.init(playerMsgs,title);
+    layer.init(gameData,title);
     return layer;
 }
 module.exports = PlayerLayer;

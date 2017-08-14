@@ -3,7 +3,7 @@
  * @type {void|*}
  */
 
-var midu = 10;
+var common = require('../util/common.js');
 var PlayerDrawSprite = require('./PlayerDrawSprite.js');
 var PlayerSprite = qc.Sprite.extend({
     playerDraw:null,
@@ -12,16 +12,11 @@ var PlayerSprite = qc.Sprite.extend({
 
     init:function(color,title,weight){
         this.weight = weight;
-        this.playerDraw = PlayerDrawSprite.create(color,title,this.transformWeightToR(weight));
+        this.playerDraw = PlayerDrawSprite.create(color,title,common.transformWeightToR(weight));
         this.initSprite();
     },
     initSprite:function(){
         this.addChild(this.playerDraw);
-    },
-    transformWeightToR:function(weight){
-        var c = weight/midu;
-        var r = Math.sqrt(c/Math.PI);
-        return r;
     }
 });
 PlayerSprite.create = function(color,title,weight){

@@ -14,13 +14,25 @@ var PlayerGroupSprite = qc.Sprite.extend({
         this.playerMsg = playerMsg;
         this.color = playerMsg.color;
         this.title = playerMsg.title;
-        this.players = [];
-        this.initPlayer();
+        this.weight = playerMsg.weight;
+        this.reSetPlayer(playerMsg.items);
     },
-    initPlayer:function(){
-        var playerInit = PlayerSprite.create(this.color,this.title,this.weight);
-        this.players.push(playerInit);
-        this.addChild(playerInit);
+    getPlayers:function(){
+        return this.players;
+    },
+    reSetPlayer:function(players){
+        this.players = [];
+        this.removeAllChildren();
+        for(var i=0;i<players.length;i++){
+            var player = players[i];
+            var weight = player.weight;
+            var posData = player.pos;
+            var pos = qc.p(posData.x,posData.y);
+            var playerInit = PlayerSprite.create(this.color,this.title,weight);
+            playerInit.setPosition(pos);
+            this.players.push(playerInit);
+        }
+
     }
 });
 
