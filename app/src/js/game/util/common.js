@@ -5,6 +5,9 @@ var common = {
         var r = Math.sqrt(c/Math.PI);
         return r;
     },
+    giveMeRandomNick:function(){
+        return "吃货火柴棍";
+    },
     giveMeRandomColor:function(){
     var colors = [
         '#f144d2',

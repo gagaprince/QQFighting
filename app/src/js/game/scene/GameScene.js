@@ -1,3 +1,5 @@
+
+
 var res = require('../resource.js').res;
 var EventLayer = require('../layer/EventLayer.js');
 var RiceLayer = require('../layer/RiceLayer.js');
@@ -6,8 +8,11 @@ var SpineSprite = require('../sprite/SpineSprite.js');
 var InitData = require('../mock/InitData.js');
 
 var PlayerSprite = require('../sprite/PlayerSprite.js');
+var ClientManager = require('../util/ClientManager.js');
+var ClientMsgFactory = require('../util/ClientMsgFactory.js');
 var GameLayer = qc.Layer.extend({
     bgSprit:null,
+    bigData:null,
 
     winSize:null,
     riceLayer:null,
@@ -16,18 +21,26 @@ var GameLayer = qc.Layer.extend({
 
     init:function(){
         this.winSize = qc.director.getWinSize();
-        this.initRiceLayer();
-        this.initPlayerLayer();
-        //this.initSpine();
-        //this.initPlayer();
-        this.initEventLayer();
+        var _this = this;
+        ClientManager.addStrategy("login",function(data){
+            _this.bigData = data;
+            _this.initRiceLayer();
+            _this.initPlayerLayer();
+            //this.initSpine();
+            //this.initPlayer();
+            _this.initEventLayer();
+        });
+
     },
     initRiceLayer:function() {
-        this.riceLayer = RiceLayer.create(2000);
+        var bigData = this.bigData;
+        var w = bigData.map.w;
+        this.riceLayer = RiceLayer.create(w);
         this.addChild(this.riceLayer);
     },
     initPlayerLayer:function(){
-        this.playerLayer = PlayerLayer.create(InitData,"吃货火柴棍");
+        var bigData = this.bigData;
+        this.playerLayer = PlayerLayer.create(bigData,ClientMsgFactory.createPlayerInfo().title);
         this.addChild(this.playerLayer);
     },
     initSpine:function(){
