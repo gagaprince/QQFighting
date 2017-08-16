@@ -4,6 +4,9 @@
  */
 
 var PlayerSprite = require('./PlayerSprite.js');
+var EventMagager = require('../event/EventManager.js');
+var em = EventMagager.em;
+var Event = em.GEvent;
 var PlayerGroupSprite = qc.Sprite.extend({
     playerMsg:null,
     players:null,
@@ -16,6 +19,24 @@ var PlayerGroupSprite = qc.Sprite.extend({
         this.title = playerMsg.title;
         this.weight = playerMsg.weight;
         this.reSetPlayer(playerMsg.items);
+    },
+    listenEventMsg:function(){
+        var _this = this;
+        em.addEventListener(Event.EventName.PLAYER_EVENT,function(event){
+            var data = event.getData();
+            //这个地方可以向服务器端发送事件
+
+            //暂时先直接处理事件
+            _this.execute(data);
+        });
+    },
+    execute:function(order){
+        var players = this.players;
+        for(var i=0;i<players.length;i++){
+            var player = players[i];
+            player.execute(order);
+        }
+
     },
     getPlayers:function(){
         return this.players;
@@ -33,6 +54,17 @@ var PlayerGroupSprite = qc.Sprite.extend({
             this.players.push(playerInit);
         }
 
+    },
+    crashCheckWithRice:function(riceLayer){
+        var players = this.players;
+        for(var i=0;i<players.length;i++){
+            var player = players[i];
+            player.crashCheckWithRice(riceLayer);
+        }
+        this.refreshWeight();
+    },
+    refreshWeight:function(){
+        //更新总重量
     }
 });
 

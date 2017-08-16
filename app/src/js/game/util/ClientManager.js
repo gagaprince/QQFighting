@@ -8,7 +8,10 @@ var ClientManager = {
         //与服务器建立连接
         var playerInfo = ClientMsgFactory.createPlayerInfo();
         playerInfo.type = "login";
+        console.log("client game begin");
+        console.log(playerInfo);
         this.sendMsg(playerInfo);
+        this.receiveMsg();
     },
     receiveMsg:function(){
         //接收客户机的消息 并做处理转发
@@ -17,7 +20,8 @@ var ClientManager = {
             //模拟异步
             setTimeout(function(){
                 var data = e.getData();
-                _this.dispatch();
+                console.log(data);
+                _this.dispatch(data);
             });
 
         });
@@ -31,12 +35,16 @@ var ClientManager = {
         em.postMsg(event);
     },
     addStrategy:function(type,callback){
+        console.log("addStrategy");
         this.strategys[type] = callback;
     },
     dispatch:function(data){
         var type = data.type;
+        var bigData = data.bigData;
         var strategy = this.strategys[type];
-        strategy(data);
+        if(strategy){
+            strategy(bigData);
+        }
     }
 }
 module.exports = ClientManager;

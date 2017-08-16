@@ -9,7 +9,7 @@ var common = {
         return "吃货火柴棍";
     },
     giveMeRandomColor:function(){
-    var colors = [
+        var colors = [
         '#f144d2',
         '#f42b39',
         '#cbfa59',
@@ -18,8 +18,13 @@ var common = {
         '#5af8e7',
         '#b2f8a4',
         '7','8','9','a','b','c','d','e','f'];
-    var num = Math.floor(Math.random()*7);
-    return colors[num];
-}
+        var num = Math.floor(Math.random()*7);
+        return colors[num];
+    },
+    distanse:function(p1,p2){
+        var dx = p1.x-p2.x;
+        var dy = p1.y-p2.y;
+        return Math.sqrt(dx*dx+dy*dy);
+    }
 }
 module.exports = common;

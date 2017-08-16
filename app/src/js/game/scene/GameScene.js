@@ -18,17 +18,22 @@ var GameLayer = qc.Layer.extend({
     riceLayer:null,
     playerLayer:null,
     eventLayer:null,
+    _crashCheckInterval:null,
 
     init:function(){
         this.winSize = qc.director.getWinSize();
         var _this = this;
+        ClientManager.beginGame();
         ClientManager.addStrategy("login",function(data){
+            console.log("login success");
+            console.log(data);
             _this.bigData = data;
             _this.initRiceLayer();
             _this.initPlayerLayer();
             //this.initSpine();
             //this.initPlayer();
             _this.initEventLayer();
+            _this.beginCrashCheck();
         });
 
     },
@@ -58,6 +63,16 @@ var GameLayer = qc.Layer.extend({
     initEventLayer:function(){
         this.eventLayer = EventLayer.create();
         this.addChild(this.eventLayer);
+    },
+    beginCrashCheck:function(){
+        var _this = this;
+        this._crashCheckInterval = setInterval(function(){
+            _this._crashCheck();
+        },10);
+    },
+    _crashCheck:function(){
+        this.playerLayer.crashCheckWithRice(this.riceLayer);
+        this.playerLayer.crashCheckWithPlayer();
     }
 });
 var GameScene = qc.Scene.extend({

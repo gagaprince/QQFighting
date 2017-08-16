@@ -7,6 +7,7 @@ var PlayerGroupSprite = require('../sprite/PlayerGroupSprite.js');
 var SpineSprite = require('../sprite/SpineSprite.js');
 var PlayerLayer = qc.Layer.extend({
     playGroups:null,
+    playGroupsMap:null,
     spines:null,
     mySelf:null,
     all:null,//由玩家和尖刺组成的数组 会根据weight排序
@@ -15,6 +16,7 @@ var PlayerLayer = qc.Layer.extend({
     },
     resetAllByData:function(gameData,title){
         this.playGroups = [];
+        this.playGroupsMap = {};
         this.spines = [];
         this.all = [];
         this.initPlayerGroups(gameData,title);
@@ -70,11 +72,23 @@ var PlayerLayer = qc.Layer.extend({
     initMySelf:function(playerGroup){
         //有特殊处理逻辑  要开启控制权
         this.mySelf = playerGroup;
+        playerGroup.listenEventMsg();
     },
     createPlayerGroup:function(playerMsg){
         var playerGroup = PlayerGroupSprite.create(playerMsg);
         this.playGroups.push(playerGroup);
+        this.playGroupsMap[playerMsg.title] = playerGroup;
         return playerGroup;
+    },
+    crashCheckWithRice:function(riceLayer){
+        var playerGroups = this.playGroups;
+        for(var i=0;i<playerGroups.length;i++){
+            var playerGroup = playerGroups[i];
+            playerGroup.crashCheckWithRice(riceLayer);
+        }
+    },
+    crashCheckWithPlayer:function(){
+
     }
 });
 PlayerLayer.create = function(gameData,title){

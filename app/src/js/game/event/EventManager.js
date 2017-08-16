@@ -24,7 +24,8 @@ var GEvent = qc.Class.extend({
 })
 GEvent.EventName={
     EVENT_FROM_CLIENT:"eventFromClient",
-    EVENT_FROM_SERVER:"eventFromServer"
+    EVENT_FROM_SERVER:"eventFromServer",
+    PLAYER_EVENT:"playerEvent"
 }
 
 

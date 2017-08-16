@@ -8,6 +8,7 @@ var common = require('../util/common.js');
 var RiceSprite = qc.Sprite.extend({
     color:0,
     num:0,
+    weight:1000,
     init:function(color,num){
         this.color = color;
         this.num = num;
@@ -15,9 +16,9 @@ var RiceSprite = qc.Sprite.extend({
     },
     initSprite:function(color,num){
         var riceDraw = RiceDrawSprite.create(color,num);
-        var randomRad = Math.random()*360;
+        //var randomRad = Math.random()*360;
         this.addChild(riceDraw);
-        this.setRotation(randomRad);
+        //this.setRotation(randomRad);
     }
 });
 

@@ -17,9 +17,11 @@ var ClientMsgFactory = {
         var color = window.localStorage.getItem(colorKey);
         if(!nickName){
             nickName = common.giveMeRandomNick();
+            window.localStorage.setItem(nickNameKey,nickName);
         }
         if(!color){
             color = common.giveMeRandomColor();
+            window.localStorage.setItem(colorKey,color);
         }
         return {
             title:nickName,

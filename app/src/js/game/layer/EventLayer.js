@@ -4,6 +4,9 @@
  */
 
 var res = require('../resource.js').res;
+var EventMagager = require('../event/EventManager.js');
+var em = EventMagager.em;
+var Event = em.GEvent;
 
 var EventLayer = qc.Layer.extend({
     penSprite:null,
@@ -39,6 +42,44 @@ var EventLayer = qc.Layer.extend({
             onTouchMoved: this.onTouchMoved.bind(_t),
             onTouchEnded: this.onTouchEnded.bind(_t)
         },this);
+        this.testKeyEvent();
+    },
+    testKeyEvent:function(){
+        console.log("testKeyEvent");
+        var _this = this;
+        document.onkeydown = function(event){
+            var msg = {};
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if(e){
+                switch (e.keyCode){
+                    case 87:
+                        msg["type"]="move";
+                        msg["rotation"]=Math.PI/2;
+                        break;
+                    case 83:
+                        msg["type"]="move";
+                        msg["rotation"]=-Math.PI/2;
+                        break;
+                    case 65:
+                        msg["type"]="move";
+                        msg["rotation"]=-Math.PI;
+                        break;
+                    case 68:
+                        msg["type"]="move";
+                        msg["rotation"]=0;
+                        break;
+                }
+            }
+            msg["speed"]=1;
+            _this.sendMsg(msg);
+        }
+    },
+    sendMsg:function(msg){
+        if(msg.type){
+            var event = new Event(Event.EventName.PLAYER_EVENT);
+            event.setData(msg);
+            em.postMsg(event);
+        }
     },
     //如果需要阻止冒泡 则 使用stopPropagation
     onTouchBegan:function(touch,event){

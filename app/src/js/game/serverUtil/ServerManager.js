@@ -5,8 +5,8 @@ var Event = em.GEvent;
 var serverManager = {
     bigData:null,
     map:{
-        w:1000,
-        h:1000
+        w:900,
+        h:500
     },
     strategys:{},
     addStrategy:function(type , callback){
@@ -21,6 +21,7 @@ var serverManager = {
             spines:[],
             bills:[]
         };
+        this.receiveMsg();
     },
     addPlayer:function(playerInfo){
         //加入玩家
@@ -29,10 +30,10 @@ var serverManager = {
         players.push({
             title:playerInfo.title,
             color:playerInfo.color,
-            weight:playerInfo.weight||1000,
+            weight:playerInfo.weight||10000,
             items:[
                 {
-                    weight:playerInfo.weight||1000,
+                    weight:playerInfo.weight||10000,
                     pos:this._randomPos()
                 }
             ]
@@ -53,7 +54,9 @@ var serverManager = {
         //接收客户机的消息 并做处理转发
         var _this = this;
         em.addEventListener(em.GEvent.EventName.EVENT_FROM_CLIENT,function(e){
-            _this.dispatch(e);
+            setTimeout(function(){
+                _this.dispatch(e);
+            });
         });
     },
     sendMsg:function(event){
@@ -63,6 +66,7 @@ var serverManager = {
     },
     dispatch:function(e){
         var data = e.getData();
+        console.log("serverManager dispatch");
         var type = data.type;
         var callback = this.strategys[type];
         if(callback){
@@ -88,8 +92,12 @@ serverManager.addStrategy("login",function(data){
     if(!serverManager.checkPlayerIn(title)){
         serverManager.addPlayer(data);
     }
+    var data = {
+        type:"login",
+        bigData:serverManager.bigData
+    }
     var event = new Event(Event.EventName.EVENT_FROM_SERVER);
-    event.setData(serverManager.bigData);
+    event.setData(data);
     serverManager.sendMsg(event);
 });
 
