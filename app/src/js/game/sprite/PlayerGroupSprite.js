@@ -13,6 +13,7 @@ var PlayerGroupSprite = qc.Sprite.extend({
     color:null,
     title:"",
     weight:1000,
+    isSelf:false,
     init:function(playerMsg){
         this.playerMsg = playerMsg;
         this.color = playerMsg.color;
@@ -22,6 +23,7 @@ var PlayerGroupSprite = qc.Sprite.extend({
     },
     listenEventMsg:function(){
         var _this = this;
+        this.isSelf = true;//是当前玩家对象
         em.addEventListener(Event.EventName.PLAYER_EVENT,function(event){
             var data = event.getData();
             //这个地方可以向服务器端发送事件
@@ -29,6 +31,7 @@ var PlayerGroupSprite = qc.Sprite.extend({
             //暂时先直接处理事件
             _this.execute(data);
         });
+
     },
     execute:function(order){
         var players = this.players;
@@ -62,6 +65,19 @@ var PlayerGroupSprite = qc.Sprite.extend({
             player.crashCheckWithRice(riceLayer);
         }
         this.refreshWeight();
+        if(this.isSelf){
+            this.sendCurrentPosMsg();
+        }
+    },
+    sendCurrentPosMsg:function(){
+        var pos = this.players[0].getPosition();
+        var scale = 1;
+        var event = new Event(Event.EventName.COORDINATE_EVENT);
+        event.setData({
+            pos:pos,
+            scale:scale
+        });
+        em.postMsg(event);
     },
     refreshWeight:function(){
         //更新总重量
