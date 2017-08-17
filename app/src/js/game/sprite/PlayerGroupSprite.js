@@ -31,7 +31,7 @@ var PlayerGroupSprite = qc.Sprite.extend({
             //暂时先直接处理事件
             _this.execute(data);
         });
-
+        this.sendCurrentPosMsg(true);
     },
     execute:function(order){
         var players = this.players;
@@ -69,13 +69,19 @@ var PlayerGroupSprite = qc.Sprite.extend({
             this.sendCurrentPosMsg();
         }
     },
-    sendCurrentPosMsg:function(){
+    sendCurrentPosMsg:function(noAction){
         var pos = this.players[0].getPosition();
+        var maxR = 30;
+        var nowR = this.players[0].getR();
         var scale = 1;
+        if(nowR>maxR){
+            scale = maxR/nowR;
+        }
         var event = new Event(Event.EventName.COORDINATE_EVENT);
         event.setData({
             pos:pos,
-            scale:scale
+            scale:scale,
+            noAction:noAction
         });
         em.postMsg(event);
     },

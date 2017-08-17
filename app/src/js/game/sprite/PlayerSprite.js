@@ -97,6 +97,9 @@ var PlayerSprite = qc.Sprite.extend({
                 }
             }
         }
+    },
+    getR:function(){
+        return this.playerDraw.r;
     }
 });
 PlayerSprite.create = function(color,title,weight){

@@ -11,8 +11,6 @@ var Event = em.GEvent;
 var GameLayer = qc.Layer.extend({
     gameMainLayer:null,
     eventLayer:null,
-
-
     init:function(){
         this.winSize = qc.director.getWinSize();
         this.initGameMainLayer();

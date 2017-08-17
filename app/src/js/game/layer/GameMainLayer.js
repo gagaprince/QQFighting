@@ -16,6 +16,7 @@ var em = EventMagager.em;
 var Event = em.GEvent;
 
 var GameMainLayer = qc.Layer.extend({
+    mainLayer:null,
     bgSprit:null,
     bigData:null,
 
@@ -23,10 +24,13 @@ var GameMainLayer = qc.Layer.extend({
     riceLayer:null,
     playerLayer:null,
     _crashCheckInterval:null,
+    scaling:false,
 
     init:function(){
         this.winSize = qc.director.getWinSize();
         var _this = this;
+        this.mainLayer = new qc.Layer.create();
+        this.addChild(this.mainLayer);
         ClientManager.beginGame();
         ClientManager.addStrategy("login",function(data){
             console.log("login success");
@@ -42,12 +46,12 @@ var GameMainLayer = qc.Layer.extend({
         var bigData = this.bigData;
         var w = bigData.map.w;
         this.riceLayer = RiceLayer.create(w);
-        this.addChild(this.riceLayer);
+        this.mainLayer.addChild(this.riceLayer);
     },
     initPlayerLayer:function(){
         var bigData = this.bigData;
         this.playerLayer = PlayerLayer.create(bigData,ClientMsgFactory.createPlayerInfo().title);
-        this.addChild(this.playerLayer);
+        this.mainLayer.addChild(this.playerLayer);
     },
     beginCrashCheck:function(){
         var _this = this;
@@ -70,8 +74,26 @@ var GameMainLayer = qc.Layer.extend({
         var pos = coordinateData.pos;
         var winSize = this.winSize;
         var scale = coordinateData.scale;
-        this.setScale(scale);
-        this.setPosition(winSize.width/2-pos.x,winSize.height/2-pos.y);
+        var desPos = qc.p(winSize.width/2-pos.x*scale,winSize.height/2-pos.y*scale);
+        if(!coordinateData.noAction){
+            this.scaleAndMoveTo(scale,desPos);
+        }else{
+            this.setPosition(desPos);
+        }
+    },
+    scaleAndMoveTo:function(scale,pos){
+        if(this.scaling){
+            return;
+        }
+        this.scaling = true;
+        var scaleTo = qc.ScaleTo.create(1,scale);
+        var call = qc.CallFunc.create(function(){
+            this.scaling = false;
+        },this);
+        var allAction = qc.Sequence.create([scaleTo,call]);
+        this.mainLayer.runAction(allAction);
+        var moveTo = qc.MoveTo.create(1,pos);
+        this.runAction(moveTo);
     }
 });
 
