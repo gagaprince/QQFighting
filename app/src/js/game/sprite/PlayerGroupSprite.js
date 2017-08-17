@@ -8,13 +8,15 @@ var EventMagager = require('../event/EventManager.js');
 var em = EventMagager.em;
 var Event = em.GEvent;
 var PlayerGroupSprite = qc.Sprite.extend({
+    map:null,
     playerMsg:null,
     players:null,
     color:null,
     title:"",
     weight:1000,
     isSelf:false,
-    init:function(playerMsg){
+    init:function(playerMsg,map){
+        this.map = map;//地图信息
         this.playerMsg = playerMsg;
         this.color = playerMsg.color;
         this.title = playerMsg.title;
@@ -52,7 +54,7 @@ var PlayerGroupSprite = qc.Sprite.extend({
             var weight = player.weight;
             var posData = player.pos;
             var pos = qc.p(posData.x,posData.y);
-            var playerInit = PlayerSprite.create(this.color,this.title,weight);
+            var playerInit = PlayerSprite.create(this.color,this.title,weight,this.map);
             playerInit.setPosition(pos);
             this.players.push(playerInit);
         }
@@ -90,9 +92,9 @@ var PlayerGroupSprite = qc.Sprite.extend({
     }
 });
 
-PlayerGroupSprite.create = function(playerMsg){
+PlayerGroupSprite.create = function(playerMsg,map){
     var sprite = new PlayerGroupSprite();
-    sprite.init(playerMsg);
+    sprite.init(playerMsg,map);
     return sprite;
 }
 

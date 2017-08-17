@@ -25,10 +25,11 @@ var PlayerLayer = qc.Layer.extend({
     },
     initPlayerGroups:function(gameData,title){
         var playerMsgs = gameData.players;
+        var map = gameData.map;
         for(var i=0;i<playerMsgs.length;i++){
             var playerMsg = playerMsgs[i];
             var tin = playerMsg.title;
-            var playerGroup = this.createPlayerGroup(playerMsg);
+            var playerGroup = this.createPlayerGroup(playerMsg,map);
             if(tin == title){
                 this.initMySelf(playerGroup);
             }
@@ -74,8 +75,8 @@ var PlayerLayer = qc.Layer.extend({
         this.mySelf = playerGroup;
         playerGroup.listenEventMsg();
     },
-    createPlayerGroup:function(playerMsg){
-        var playerGroup = PlayerGroupSprite.create(playerMsg);
+    createPlayerGroup:function(playerMsg,map){
+        var playerGroup = PlayerGroupSprite.create(playerMsg,map);
         this.playGroups.push(playerGroup);
         this.playGroupsMap[playerMsg.title] = playerGroup;
         return playerGroup;

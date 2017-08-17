@@ -10,8 +10,10 @@ var PlayerSprite = qc.Sprite.extend({
     speed:0,
     weight:0,
     _moving:null,
+    mapW:0,
 
-    init:function(color,title,weight){
+    init:function(color,title,weight,map){
+        this.mapW = map.w;
         this.weight = weight;
         this.playerDraw = PlayerDrawSprite.create(color,title,common.transformWeightToR(weight));
         this.initSprite();
@@ -54,9 +56,21 @@ var PlayerSprite = qc.Sprite.extend({
         var speedY = speed*Math.sin(rotation);
 
         var currentPos = this.getPosition();
-        this.setPosition(currentPos.x+speedX,currentPos.y+speedY);
-
-
+        var newX = currentPos.x+speedX;
+        var newY = currentPos.y+speedY;
+        if(newX>this.mapW){
+            newX = this.mapW;
+        }
+        if(newY>this.mapW){
+            newY = this.mapW;
+        }
+        if(newX<0){
+            newX = 0;
+        }
+        if(newY<0){
+            newY = 0;
+        }
+        this.setPosition(newX,newY);
     },
     _giveMeTheRect:function(){
         var pos = this.getPosition();
@@ -102,9 +116,9 @@ var PlayerSprite = qc.Sprite.extend({
         return this.playerDraw.r;
     }
 });
-PlayerSprite.create = function(color,title,weight){
+PlayerSprite.create = function(color,title,weight,map){
     var sprite = new PlayerSprite();
-    sprite.init(color,title,weight);
+    sprite.init(color,title,weight,map);
     return sprite;
 }
 module.exports = PlayerSprite;

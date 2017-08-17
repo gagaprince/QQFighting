@@ -75,11 +75,13 @@ var GameMainLayer = qc.Layer.extend({
         var winSize = this.winSize;
         var scale = coordinateData.scale;
         var desPos = qc.p(winSize.width/2-pos.x*scale,winSize.height/2-pos.y*scale);
-        if(!coordinateData.noAction){
-            this.scaleAndMoveTo(scale,desPos);
-        }else{
-            this.setPosition(desPos);
-        }
+        //if(!coordinateData.noAction){
+        //    this.scaleAndMoveTo(scale,desPos);
+        //}else{
+        //    this.setPosition(desPos);
+        //}
+        this.setPosition(desPos);
+        this.mainLayer.setScale(scale);
     },
     scaleAndMoveTo:function(scale,pos){
         if(this.scaling){

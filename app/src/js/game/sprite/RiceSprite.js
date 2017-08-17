@@ -8,7 +8,7 @@ var common = require('../util/common.js');
 var RiceSprite = qc.Sprite.extend({
     color:0,
     num:0,
-    weight:1000,
+    weight:100,
     init:function(color,num){
         this.color = color;
         this.num = num;

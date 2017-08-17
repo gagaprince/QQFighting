@@ -48,11 +48,28 @@ var RiceLayer = qc.Layer.extend({
                 break;
             }
         }
+        this.createRice(rice.getPosition());
         rice.removeFromParent();
     },
     getRiceArrayByXY:function(x,y){
         var riceMap = this.riceMap;
         return riceMap[x+"_"+y]||[];
+    },
+    createRice:function(pos){
+        var _this = this;
+        setTimeout(function(){
+            var x = Math.floor(pos.x)-5;
+            var y = Math.floor(pos.y)-5;
+            x += Math.random()*5;
+            y += Math.random()*5;
+            if(x<0){
+                x += Math.random()+5;
+            }
+            if(y<0){
+                y += Math.random()+5;
+            }
+            _this._initRice(qc.p(x,y));
+        },10000);
     },
     _initRice:function(pos){
         var rice = RiceSprite.create();
